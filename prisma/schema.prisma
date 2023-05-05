@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  created     DateTime     @default(now())
+  updated     DateTime     @updatedAt
+  team        Team[]
+  principal   Principal[]
+  users       User[]
+  roles       Role[]
+  permissions Permission[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  users       User[]
+
+  @@unique([tenantId, name])
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String
+  password    String
+  description String?
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  tenantId    String?
+  teams       Team[]
+
+  @@unique([email])
+}
+
+model Principal {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  created     DateTime     @default(now())
+  updated     DateTime     @updatedAt
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  credentials Credential[]
+  roles       Role[]
+}
+
+model Credential {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  created     DateTime  @default(now())
+  updated     DateTime  @updatedAt
+  principal   Principal @relation(fields: [principalId], references: [id])
+  principalId String
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  version     String?
+  created     DateTime     @default(now())
+  updated     DateTime     @updatedAt
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  permissions Permission[]
+  Principal   Principal?   @relation(fields: [principalId], references: [id])
+  principalId String?
+  tenantId    String
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  key         String
+  name        String
+  description String?
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  roles       Role[]
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  tenantId    String?
+}

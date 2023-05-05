@@ -1,0 +1,39 @@
+{
+    "name": "@contentrcloud/models",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "18.15.11",
+        "prisma": "^4.13.0",
+        "ts-node": "^10.0.0"
+    },
+    "prisma": {
+        "seed": "ts-node prisma/seed.ts"
+    },
+    "eslintConfig": {
+        "extends": "@mateothegreat/eslint-config"
+    },
+    "prettier": {
+        "printWidth": 200,
+        "tabWidth": 4,
+        "bracketSameLine": true,
+        "singleQuote": true,
+        "arrowParens": "avoid",
+        "semi": true,
+        "trailingComma": "none",
+        "bracketSpacing": true
+    },
+    "dependencies": {
+        "@prisma/client": "4.13.0",
+        "@rbacai/models": "^0.0.16",
+        "install": "^0.13.0",
+        "npm": "^9.6.6"
+    }
+}
